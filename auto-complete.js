@@ -30,6 +30,8 @@ var autoComplete = (function(){
 
         var o = {
             selector: 0,
+            listboxID: 0,
+            listitemsID:0,
             source: 0,
             minChars: 3,
             delay: 150,
@@ -37,11 +39,19 @@ var autoComplete = (function(){
             offsetTop: 1,
             cache: 1,
             menuClass: '',
-            renderItem: function (item, search){
+            renderItem: function (item, search, listItemIndex){
                 // escape special characters
                 search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
                 var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-                return '<div class="autocomplete-suggestion" data-val="' + item + '">' + item.replace(re, "<b>$1</b>") + '</div>';
+                var suggestionItem = document.createElement('li');
+                suggestionItem.setAttribute('class','autocomplete-suggestion');
+                suggestionItem.setAttribute('data-val',item);
+                suggestionItem.setAttribute('id', this.listitemsID + listItemIndex);
+                var suggestionItemText = document.createTextNode(item.replace(re, "<b>$1</b>")) ;
+
+                suggestionItem.appendChild(suggestionItemText);
+
+                return suggestionItem;
             },
             onSelect: function(e, term, item){}
         };
@@ -53,7 +63,7 @@ var autoComplete = (function(){
             var that = elems[i];
 
             // create suggestions container "sc"
-            that.sc = document.createElement('div');
+            that.sc = document.getElementById(''+o.listboxID+'');
             that.sc.className = 'autocomplete-suggestions '+o.menuClass;
 
             that.autocompleteAttr = that.getAttribute('autocomplete');
@@ -82,7 +92,6 @@ var autoComplete = (function(){
                 }
             }
             addEvent(window, 'resize', that.updateSC);
-            document.body.appendChild(that.sc);
 
             live('autocomplete-suggestion', 'mouseleave', function(e){
                 var sel = that.sc.querySelector('.autocomplete-suggestion.selected');
@@ -114,13 +123,30 @@ var autoComplete = (function(){
             };
             addEvent(that, 'blur', that.blurHandler);
 
+            //Check to see if suggestions already exist
+            //If they do remove them first
             var suggest = function(data){
+                //Convert live NodeList to an array to prevent loop from not finishing
+                var prevSuggestions = [].slice.call(that.sc.getElementsByTagName('li'));
+                if (prevSuggestions.length > 0){
+                    //IIFE to prevent scope pollution
+                    for (var i=0; i < prevSuggestions.length; i++){
+                        (function () {
+                            var prevSuggestionParent = prevSuggestions[i].parentNode;
+                            prevSuggestionParent.removeChild(prevSuggestions[i]);
+                        })();
+                    }
+                }
                 var val = that.value;
                 that.cache[val] = data;
                 if (data.length && val.length >= o.minChars) {
-                    var s = '';
-                    for (var i=0;i<data.length;i++) s += o.renderItem(data[i], val);
-                    that.sc.innerHTML = s;
+                    //var s = '';
+                    var listItemIDIndex = 0;
+                    for (var i=0;i<data.length;i++){
+                        that.sc.appendChild(o.renderItem(data[i], val, listItemIDIndex));
+                        listItemIDIndex += 1;
+                    }
+
                     that.updateSC(0);
                 }
                 else
