@@ -47,9 +47,27 @@ var autoComplete = (function(){
                 suggestionItem.setAttribute('class','autocomplete-suggestion');
                 suggestionItem.setAttribute('data-val',item);
                 suggestionItem.setAttribute('id', this.listitemsID + listItemIndex);
-                var suggestionItemText = document.createTextNode(item.replace(re, "<b>$1</b>")) ;
 
-                suggestionItem.appendChild(suggestionItemText);
+                var itemSections = item.split(re);
+                for(var i=0; i < itemSections.length; i++){
+                    //create span item with text node if match occurs
+                    if(re.test(itemSections[i])){
+                        (function(){
+                            var suggestionSpan = document.createElement('span');
+                            var suggestionSpanText = document.createTextNode(itemSections[i]);
+                            suggestionSpan.appendChild(suggestionSpanText);
+                            suggestionItem.appendChild(suggestionSpan);
+
+                        })();
+                    }
+                    //else create regular text node and append it to the suggestion item element
+                    else{
+                        (function(){
+                            var suggestionText = document.createTextNode(itemSections[i]);
+                            suggestionItem.appendChild(suggestionText);
+                        })();
+                    }
+                }
 
                 return suggestionItem;
             },
