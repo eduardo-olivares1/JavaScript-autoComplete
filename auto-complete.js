@@ -111,7 +111,11 @@ var autoComplete = (function(){
             }
             addEvent(window, 'resize', that.updateSC);
 
-            live('autocomplete-suggestion', 'mouseleave', function(e){
+            live('autocomplete-suggestion', 'mouseout', function(e){
+                 var event = e.toElement || e.relatedTarget;
+                 if (event.parentNode == this || event == this) {
+                    return;
+                    }
                 var sel = that.sc.querySelector('.autocomplete-suggestion.selected');
                 if (sel) setTimeout(function(){ sel.className = sel.className.replace(' selected', ''); }, 20);
             }, that.sc);
