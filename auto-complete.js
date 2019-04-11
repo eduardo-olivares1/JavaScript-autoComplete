@@ -47,6 +47,7 @@ var autoComplete = (function(){
                 var suggestionItem = document.createElement('li');
                 suggestionItem.setAttribute('class','autocomplete-suggestion');
                 suggestionItem.setAttribute('data-val',item);
+                suggestionItem.setAttribute('role','option');
                 suggestionItem.setAttribute('id', this.listitemsID + listItemIndex);
 
                 var itemSections = item.split(re);
