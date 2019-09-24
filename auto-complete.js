@@ -32,6 +32,7 @@ var autoComplete = (function(){
         var o = {
             selector: 0,
             listboxID: 0,
+            comboboxID:0,
             listitemsID:0,
             source: 0,
             minChars: 3,
@@ -82,12 +83,15 @@ var autoComplete = (function(){
         for (var i=0; i<elems.length; i++) {
             var that = elems[i];
 
+            //Get combobox container to modify aria expanded status
+            that.cb = document.getElementById(''+o.comboboxID+'');
+
             // create suggestions container "sc"
             that.sc = document.getElementById(''+o.listboxID+'');
             that.sc.className = 'autocomplete-suggestions '+o.menuClass;
 
             that.autocompleteAttr = that.getAttribute('autocomplete');
-            that.setAttribute('autocomplete', 'off');
+            that.setAttribute('autocomplete', 'list');
             that.cache = {};
             that.last_val = '';
 
@@ -98,6 +102,7 @@ var autoComplete = (function(){
                 that.sc.style.width = Math.round(rect.right - rect.left) + 'px'; // outerWidth
                 if (!resize) {
                     that.sc.style.display = 'block';
+                    that.cb.setAttribute('aria-expanded','true');
                     if (!that.sc.maxHeight) { that.sc.maxHeight = parseInt((window.getComputedStyle ? getComputedStyle(that.sc, null) : that.sc.currentStyle).maxHeight); }
                     if (!that.sc.suggestionHeight) that.sc.suggestionHeight = that.sc.querySelector('.autocomplete-suggestion').offsetHeight;
                     if (that.sc.suggestionHeight)
