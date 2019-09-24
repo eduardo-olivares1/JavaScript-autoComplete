@@ -59,10 +59,10 @@
         <a style="margin:5px 0" href="https://github.com/Pixabay/JavaScript-autoComplete" class="pure-button button-lg">View on GitHub</a>
     </div>
 
-    <form onsubmit="return false;" class="pure-form" style="border-top: 1px solid #eee;border-bottom:1px solid #eee;background:#fafafa;margin:30px 0;padding:20px 10px;text-align:center">
+    <form onsubmit="javascript:void(0)" class="pure-form" style="border-top: 1px solid #eee;border-bottom:1px solid #eee;background:#fafafa;margin:30px 0;padding:20px 10px;text-align:center" autocomplete="off">
       <label for="hero-demo" id="hero-demo-label">Enter A Programming Languge: </label>
        <span id="hero-demo-combobox" role="combobox" aria-expanded="false" aria-owns="hero-demo-listbox" aria-haspopup="listbox">
-        <input id="hero-demo" aria-autocomplete="list" aria-controls="hero-demo-listbox" autofocus type="text" name="q" placeholder="Programming languages ..." style="width:100%;max-width:600px;outline:0" aria-activedescendant>
+        <input id="hero-demo" aria-autocomplete="list" aria-controls="hero-demo-listbox" autofocus type="text" name="languages" placeholder="Programming languages ..." style="width:100%;max-width:600px;outline:0" aria-activedescendant>
         </span>
         <ul id="hero-demo-listbox" role="listbox" aria-labelledby="hero-demo-label" class="hidden"></ul>
     </form>
@@ -286,9 +286,12 @@ new autoComplete({
                 suggest(suggestions);
             }
         });
-        /*
+
         var demo2 = new autoComplete({
             selector: '#advanced-demo',
+            listboxID: '',
+            comboboxID: '',
+            listitemsID: '',
             minChars: 0,
             source: function(term, suggest){
                 term = term.toLowerCase();
@@ -318,7 +321,6 @@ new autoComplete({
                 <iframe style="float:left;margin-right:15px" src="//ghbtns.com/github-btn.html?user=Pixabay&repo=JavaScript-autoComplete&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>\
             ';
         }
-        */
     </script>
     <!-- <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js" async defer></script> -->
 </body>
