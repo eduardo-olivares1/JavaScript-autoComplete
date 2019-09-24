@@ -140,6 +140,7 @@ var autoComplete = (function(){
                     that.value = v;
                     o.onSelect(e, v, this);
                     that.sc.style.display = 'none';
+                    that.cb.setAttribute('aria-expanded','false');
                     that.setAttribute('aria-activedescendant', '');
                 }
             }, that.sc);
@@ -149,8 +150,9 @@ var autoComplete = (function(){
                 if (!over_sb) {
                     that.last_val = that.value;
                     that.sc.style.display = 'none';
+                    that.cb.setAttribute('aria-expanded','false');
                     that.setAttribute('aria-activedescendant', '');
-                    setTimeout(function(){ that.sc.style.display = 'none'; that.setAttribute('aria-activedescendant', '');}, 350); // hide suggestions on fast input
+                    setTimeout(function(){ that.sc.style.display = 'none'; that.cb.setAttribute('aria-expanded','false'); that.setAttribute('aria-activedescendant', '');}, 350); // hide suggestions on fast input
                 } else if (that !== document.activeElement) setTimeout(function(){ that.focus(); }, 20);
             };
             addEvent(that, 'blur', that.blurHandler);
@@ -180,9 +182,12 @@ var autoComplete = (function(){
 
                     that.updateSC(0);
                 }
-                else
+                else{
                     that.sc.style.display = 'none';
+                    that.cb.setAttribute('aria-expanded','false');
                     that.setAttribute('aria-activedescendant', '');
+                }
+
             }
 
             that.keydownHandler = function(e){
@@ -209,11 +214,11 @@ var autoComplete = (function(){
                     return false;
                 }
                 // esc
-                else if (key == 27) { that.value = that.last_val; that.sc.style.display = 'none'; that.setAttribute('aria-activedescendant', '');}
+                else if (key == 27) { that.value = that.last_val; that.sc.style.display = 'none'; that.cb.setAttribute('aria-expanded','false'); that.setAttribute('aria-activedescendant', '');}
                 // enter
                 else if (key == 13 || key == 9) {
                     var sel = that.sc.querySelector('.autocomplete-suggestion.selected');
-                    if (sel && that.sc.style.display != 'none') { o.onSelect(e, sel.getAttribute('data-val'), sel); setTimeout(function(){ that.sc.style.display = 'none'; that.setAttribute('aria-activedescendant', '');}, 20); }
+                    if (sel && that.sc.style.display != 'none') { o.onSelect(e, sel.getAttribute('data-val'), sel); setTimeout(function(){ that.sc.style.display = 'none'; that.cb.setAttribute('aria-expanded','false'); that.setAttribute('aria-activedescendant', '');}, 20); }
                 }
             };
             addEvent(that, 'keydown', that.keydownHandler);
@@ -239,6 +244,7 @@ var autoComplete = (function(){
                     } else {
                         that.last_val = val;
                         that.sc.style.display = 'none';
+                        that.cb.setAttribute('aria-expanded','false');
                         that.setAttribute('aria-activedescendant', '');
                     }
                 }
